@@ -1,8 +1,6 @@
 package com.security.java17.services;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
+import com.security.java17.model.*;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.DefaultClaims;
 
 import org.slf4j.Logger;
@@ -11,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.security.Signature;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
@@ -47,10 +46,11 @@ public class UserAccessServiceImpl implements UserAccessService {
             Key key = keyStoreService.createUserKey(userId);
             long nowDate = LocalDate.now().toEpochSecond(LocalTime.now(), ZoneOffset.ofHours(0))*1000;
             long expirationDate = (nowDate + 3600*24)*1000;
+            SignatureAlgorithm signature = SignatureAlgorithm.HS384;
             List<String> roles = userData.getRoles().stream().map(RoleId::getId).collect(Collectors.toList());
             String jwToken = Jwts.builder()
                     .setSubject(userId.getId())
-                    .signWith(key)
+                    .signWith(signature,key)
                     .setExpiration(new Date(expirationDate))
                     .setIssuer("issuer")
                     .setIssuedAt(new Date(nowDate))
@@ -69,7 +69,7 @@ public class UserAccessServiceImpl implements UserAccessService {
     public Optional<Jws<Claims>> validate(JWToken jwToken) {
         try {
             String jwTokenWithoutSignature = JWTUtils.removeSignature(jwToken.getToken());
-            Jwt jwt = Jwts.parserBuilder().build().parse(jwTokenWithoutSignature);
+            Jwt jwt = Jwts.parser() .parse(jwTokenWithoutSignature);
             DefaultClaims body = (DefaultClaims) jwt.getBody();
             String subject = body.get(Claims.SUBJECT, String.class);
             UserId userId = UserId.from(subject);
@@ -77,7 +77,7 @@ public class UserAccessServiceImpl implements UserAccessService {
             if (userData != null) {
                 Optional<Key> userKey = keyStoreService.getUserKey(userId);
                 if (userKey.isPresent()) {
-                    Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(userKey.get()).build().parseClaimsJws(jwToken.getToken());
+                    Jws<Claims> claimsJws = Jwts.parser() .setSigningKey(userKey.get()).parseClaimsJws(jwToken.getToken());
                     return Optional.of(claimsJws);
                 } else {
                     LOG.warn("key for user {} not found !", userId.getId());
@@ -95,7 +95,7 @@ public class UserAccessServiceImpl implements UserAccessService {
     public boolean logout(JWToken jwToken) {
         try {
             String jwTokenWithoutSignature = JWTUtils.removeSignature(jwToken.getToken());
-            Jwt jwt = Jwts.parserBuilder().build().parse(jwTokenWithoutSignature);
+            Jwt jwt = Jwts.parser().parse(jwTokenWithoutSignature);
             DefaultClaims body = (DefaultClaims) jwt.getBody();
             String subject = body.get(Claims.SUBJECT, String.class);
             UserId userId = UserId.from(subject);
@@ -104,7 +104,7 @@ public class UserAccessServiceImpl implements UserAccessService {
                 Optional<Key> userKey = keyStoreService.getUserKey(userId);
                 if (userKey.isPresent()) {
                     try {
-                        Jwts.parserBuilder().setSigningKey(userKey.get()).build().parseClaimsJws(jwToken.getToken());
+                        Jwts.parser().setSigningKey(userKey.get()).parseClaimsJws(jwToken.getToken());
                         keyStoreService.removeUserKey(userId);
                         UserData userDataNoJwt = UserData.cloneAndRemoveJwToken(userData);
                         users.put(userId, userDataNoJwt);
