@@ -1,5 +1,5 @@
 package com.security.java17.services;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.ServerData;
+import com.security.java17.model.ServerData;
 import org.springframework.stereotype.Service;
 
 @Service

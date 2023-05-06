@@ -1,6 +1,6 @@
 package com.security.java17.controller;
-import itx.examples.springboot.security.springsecurity.jwt.services.DataService;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.ServerData;
+import com.security.java17.model.ServerData;
+import com.security.java17.services.DataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

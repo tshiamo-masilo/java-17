@@ -1,5 +1,5 @@
 package com.security.java17.services;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.UserId;
+import com.security.java17.model.UserId;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;

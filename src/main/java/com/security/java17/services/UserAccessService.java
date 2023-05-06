@@ -1,10 +1,11 @@
 package com.security.java17.services;
 
+import com.security.java17.model.JWToken;
+import com.security.java17.model.LoginRequest;
+import com.security.java17.model.UserData;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.JWToken;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.LoginRequest;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.UserData;
+
 
 import java.util.Optional;
 

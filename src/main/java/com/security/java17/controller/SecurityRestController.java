@@ -1,12 +1,13 @@
 package com.security.java17.controller;
 
-import itx.examples.springboot.security.springsecurity.jwt.rest.dto.LoginUserNamePasswordRequest;
-import itx.examples.springboot.security.springsecurity.jwt.services.JWTUtils;
-import itx.examples.springboot.security.springsecurity.jwt.services.UserAccessService;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.JWToken;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.LoginRequest;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.UserData;
-import itx.examples.springboot.security.springsecurity.jwt.services.dto.UserId;
+
+import com.security.java17.dto.LoginUserNamePasswordRequest;
+import com.security.java17.model.JWToken;
+import com.security.java17.model.LoginRequest;
+import com.security.java17.model.UserData;
+import com.security.java17.model.UserId;
+import com.security.java17.services.JWTUtils;
+import com.security.java17.services.UserAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
