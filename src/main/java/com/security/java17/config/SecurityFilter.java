@@ -37,7 +37,7 @@ public class SecurityFilter implements Filter {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         String authorization = httpServletRequest.getHeader("Authorization");
